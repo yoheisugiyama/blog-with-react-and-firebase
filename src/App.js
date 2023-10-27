@@ -5,18 +5,22 @@ import CreatePost from './components/CreatePost';
 import Login from './components/Login';
 import Logout from './components/Logout';
 import Navbar from './components/Navbar';
+import { useState } from 'react';
 
 
 //ここでは、react-router-domを使って以下で簡単にルーティングを設定している
 
 function App() {
+
+  const [isAuth, setIsAuth] = useState(false)
+
   return (
     <Router>
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/createpost" element={<CreatePost />}></Route>
-        <Route path="/login" element={<Login />}></Route>
+        <Route path="/login" element={<Login setIsAuth={setIsAuth} />}></Route>
         <Route path="/logout" element={<Logout />}></Route>
       </Routes>
     </Router>

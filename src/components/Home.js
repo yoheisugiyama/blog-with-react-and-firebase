@@ -1,36 +1,55 @@
-import { collection, getDocs } from "firebase/firestore"
-import React, { useEffect } from 'react'
+import { collection, deleteDoc, doc, getDocs } from "firebase/firestore"
+import React, { useEffect, useState } from 'react'
 import './Home.css'
 import { getDefaultNormalizer } from '@testing-library/react'
-import { db } from "../firebase"
+import { auth, db } from "../firebase"
 
 
 const Home = () => {
+    const [postList, setPostList] = useState([]);
 
     useEffect(() => {
         const getPosts = async () => {
             const data = await getDocs(collection(db, "posts"))
-            console.log(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+            // Firebaseの階層が深いから、データを取ってくるのがなかなか大変
+            // console.log(data)
+            // console.log(data.docs)
+            // console.log(data.docs.map((doc) => ({doc})))
+            // console.log(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+            setPostList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
         }
         getPosts()
+
     }, [])
+
+    const handleDelete = async (id) => {
+        await deleteDoc(doc(db, "posts", id))
+        window.location.href = "/"
+    }
 
     return (
         <div className='homePage'>
-            <div className="postContents">
-                <div className="postHeader">
-                    <h1>タイトル</h1>
-                </div>
-                <div className="postTextContainer">
-                    今はReactの学習中です。これから頑張ってReactエンジニアとして活躍していきたいと思います。よろしくお願いいたします。
-                </div>
-                <div className="nameAndDeleteButton">
-                    <h3>@ShinCode</h3>
-                    <button>削除</button>
-                </div>
-            </div>
+            {postList.map((post) => {
+                return (
+                    <div className="postContents" key={post.id}>
+                        <div className="postHeader">
+                            <h1>{post.title}</h1>
+                        </div>
+                        <div className="postTextContainer">
+                            {post.postsText}
+                        </div>
+                        <div className="nameAndDeleteButton">
+                            <h3>{post.author.username}</h3>
+                            {post.author.id === auth.currentUser.uid &&
+                                <button onClick={() => handleDelete(post.id)}>削除</button>}
+                        </div>
+                    </div>
+                )
+            })}
         </div>
     )
 }
 
 export default Home
+
+

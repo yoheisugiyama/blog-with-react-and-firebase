@@ -7,8 +7,6 @@ import { auth, provider } from '../firebase'
 // 自動的に所定の画面に遷移する
 import { useNavigate } from 'react-router-dom'
 
-
-
 const Login = ({ setIsAuth }) => {
 
     const navigate = useNavigate()

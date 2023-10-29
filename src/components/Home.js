@@ -1,7 +1,6 @@
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore"
 import React, { useEffect, useState } from 'react'
 import './Home.css'
-import { getDefaultNormalizer } from '@testing-library/react'
 import { auth, db } from "../firebase"
 
 
@@ -40,7 +39,8 @@ const Home = () => {
                         </div>
                         <div className="nameAndDeleteButton">
                             <h3>{post.author.username}</h3>
-                            {post.author.id === auth.currentUser.uid &&
+                            {/* ?. はオプショナルチェイニング演算子で、auth.currentUser が null または undefined の場合にエラーを発生させずに uid プロパティにアクセスするために使用されています */}
+                            {post.author.id === auth.currentUser?.uid &&
                                 <button onClick={() => handleDelete(post.id)}>削除</button>}
                         </div>
                     </div>

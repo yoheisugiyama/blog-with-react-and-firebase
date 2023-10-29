@@ -30,7 +30,6 @@ const Navbar = ({ isAuth }) => {
 
                 </>
             }
-
         </nav>
     )
 }
